@@ -1,0 +1,19 @@
+#!/bin/sh
+
+verify_email () {
+    IN=$(cat /dev/stdin)
+    echo "$IN" | grep -q '@' && echo "$IN" && return 0
+    echo "$IN Not an email." > 2 ; return 1
+}
+
+mail_addrs () {
+    cat ~/.config/prompt-mail.conf  \
+        | sed 's/^#.*$//' \
+        | xargs sed -E 's/^alias +[a-zA-Z0-9]+ // ; s/#.*$//'
+}
+
+mail_addrs \
+    | dmenu -i -p "mail address:" \
+    | verify_email
+
+
