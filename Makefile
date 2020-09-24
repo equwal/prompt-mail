@@ -1,20 +1,16 @@
-BIN_PATH := /usr/local/bin
+CFG_PATH = ~/.config/prompt-mail.conf
+BIN_PATH = /usr/local/bin/prompt-mail
 
-default: all
+# Empty recipes, only install if there isn't already one.
+config: ${CFG_PATH}
 
-all:
-	@echo "Putting prompt-mail.conf in ~/.config"
-	@mkdir -p ~/.config
-	@cp prompt-mail.conf ~/.config
-	@echo "Done"
 install:
-	@echo "Putting prompt-mail in ${BIN_PATH}"
+	@echo "Putting prompt-mail in ${BIN_PATH}."
 	@cp prompt-mail ${BIN_PATH}
-	@echo "Done"
 
-uninstall:
-	@echo "Deleting ${BIN_PATH}/prompt-mail"
-	@rm -f ${BIN_PATH}/prompt-mail
-	@echo "Deleting ~/.config/prompt-mail.conf"
-	@rm -f ~/.config/prompt-mail.conf
-	@echo "Done"
+${CFG_PATH}:
+	@echo -e "I have setup your toiling space ${CFG_PATH}\nEdit it, slave!"
+	@echo "#Comments must be at the beginning of the line." > ${CFG_PATH}
+	@echo "# No ~ expansion allowed." >> ${CFG_PATH}
+	@echo -e "# Example line:\n" >> ${CFG_PATH}
+	@echo "#${HOME}/.config/neomutt/aliases" >> ${CFG_PATH}
