@@ -1,0 +1,17 @@
+#!/bin/sh
+CONFIG=~/.config/neomutt/aliases
+add_email () {
+    out=$(sed -ne 's/^From:[ \t]*//p' /dev/stdin)
+    # Ensure adding aliases is idempotent with respect to mail address.
+    grep -q -F -- $(echo "$out" | sed 's/^.*<// ; s/>.*$>//') ${CONFIG}
+    active=$?
+    [ $active != 0 ] && y-or-n "Add $out? " && echo "alias $(dmenu -p 'Alias shorthand? ') $out" >> ${CONFIG}
+}
+query () {
+cat ~/.config/prompt-mail.conf \
+    | sed 's/^#.*$//' \
+    | xargs sed -E 's/^alias // ; s/#.*$//' \
+    | grep "$1"
+}
+[ "$1" == "--add-email" ] &&  add_email </dev/stdin
+[ "$1" == "--query" ] && query "$2"

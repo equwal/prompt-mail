@@ -1,9 +1,11 @@
 #!/bin/sh
+# edit this if you want a different prompter.
+PROMPT="dmenu -i -p"
 
 verify_email () {
     IN=$(cat /dev/stdin)
     echo "$IN" | grep -q '@' && echo "$IN" && return 0
-    echo "$IN Not an email." > 2 ; return 1
+    echo "$IN Not an email." >/dev/stderr ; return 1
 }
 
 mail_addrs () {
@@ -13,7 +15,5 @@ mail_addrs () {
 }
 
 mail_addrs \
-    | dmenu -i -p "mail address:" \
+    | $PROMPT 'mail address:' \
     | verify_email
-
-

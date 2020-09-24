@@ -1,3 +1,3 @@
 #!/bin/sh
 
-prompt-email | tr -d "\n" | xclip -i -selection clipboard
+prompt-mail | tr -d "\n" | xclip -i -selection clipboard
