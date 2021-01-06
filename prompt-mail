@@ -1,6 +1,6 @@
 #!/bin/sh
 # edit this if you want a different prompter.
-PROMPT="dmenu -i -p"
+PROMPT="dmenu -l 15 -i -p"
 
 verify_email () {
     IN=$(cat /dev/stdin)
