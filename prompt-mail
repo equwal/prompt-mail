@@ -9,8 +9,7 @@ verify_email () {
 }
 
 mail_addrs () {
-    cat ~/.config/prompt-mail.conf  \
-        | sed 's/^#.*$//' \
+    sed 's/^#.*$//' ~/.config/prompt-mail.conf \
         | xargs sed -E 's/^alias +[a-zA-Z0-9]+ // ; s/#.*$//'
 }
 

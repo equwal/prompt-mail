@@ -1,17 +1,19 @@
 #!/bin/sh
-CONFIG=~/.config/neomutt/aliases
+
+# Helper program for neomutt!
+# configure ~/.config/prompt-mail.conf to contain just the path to the
+# aliases filie and optional comments.
+
+
+CONFIG="$(sed '/^#.*$/d' ~/.config/prompt-mail.conf | sed -E 's/^alias // ; s/#.*$//')"
+
 add_email () {
     out=$(sed -ne 's/^From:[ \t]*//p' /dev/stdin)
     # Ensure adding aliases is idempotent with respect to mail address.
-    grep -q -F -- $(echo "$out" | sed 's/^.*<// ; s/>.*$>//') ${CONFIG}
+    grep -q -F -- $(echo "$out" | sed 's/^.*<// ; s/>.*$>//') "$CONFIG"
     active=$?
-    [ $active != 0 ] && y-or-n "Add $out? " && echo "alias $(dmenu -p 'Alias shorthand? ') $out" >> ${CONFIG}
+    [ $active != 0 ] && y-or-n "Add $out? " && echo "alias $(dmenu -p 'Alias shorthand? ') $out" >> "$CONFIG"
 }
-query () {
-cat ~/.config/prompt-mail.conf \
-    | sed 's/^#.*$//' \
-    | xargs sed -E 's/^alias // ; s/#.*$//' \
-    | grep "$1"
-}
-[ "$1" == "--add-email" ] &&  add_email </dev/stdin
-[ "$1" == "--query" ] && query "$2"
+
+[ "$1" = "--add-email" ] || [ "$1" = "-a" ] &&  add_email </dev/stdin
+[ "$1" = "--query" ] || [ "$1" = "-q" ] && grep "$2" "$CONFIG"

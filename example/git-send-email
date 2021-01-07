@@ -1,9 +1,5 @@
 #!/bin/sh
 
-# ${PARAMETER:-WORD} expands WORD if PARAMETER is null or unset.
-PROJECT=${1:-$(find . -maxdepth 1 -mindepth 1 -type d -printf "%p\n" \ # name only
-    | sed -E s:^\.[/]:: \ # No prefix
-    | xargs echo $(pwd | sed 's:^.*/::' \ # working dir
-    | dmenu -ip "Project name:"))}
-EMAIL=${2:-$(prompt-email)}
+[ -z "$1" ] && EMAIL="$(prompt-mail)"
+
 git send-email --subject-prefix="${PWD##*/}][PATCH" --to "$EMAIL" -1
