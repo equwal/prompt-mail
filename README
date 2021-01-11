@@ -15,3 +15,6 @@ alias shorthand Short Person <shortperson@wienerdog.com> # optional comment
 alias longpaw Long Cat <longperson@longcat.com> # optional comment
 
 one alias per line.
+
+`prompt-mail` just outputs the address to STDOUT.
+`mail-xclip` is an example of using prompt-mail to copy into the clipboard.
