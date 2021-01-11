@@ -1,6 +1,8 @@
 CFG_PATH = ~/.config/prompt-mail.conf
 BIN_PATH = /usr/local/bin/prompt-mail
 
+all: config install
+
 # Empty recipes, only install if there isn't already one.
 config: ${CFG_PATH}
 
