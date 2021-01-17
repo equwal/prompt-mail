@@ -1,6 +1,7 @@
 #!/bin/sh
-# edit this if you want a different prompter.
+# Edit this if you want a different prompter.
 PROMPT="dmenu -l 15 -i -p"
+REMCOMMENT=
 
 verify_email () {
     IN=$(cat /dev/stdin)
@@ -9,10 +10,13 @@ verify_email () {
 }
 
 mail_addrs () {
-    sed 's/^#.*$//' ~/.config/prompt-mail.conf \
-        | xargs sed -E 's/^alias +[a-zA-Z0-9]+ // ; s/#.*$// ; s/ +$//' | sort | uniq
+    sed 's/ *#.*//' ~/.config/prompt-mail.conf \
+        | xargs sed -E "s/^alias +[a-zA-Z0-9]+ // ; s/^#.*$// ; s/ +$//" \
+        | sort \
+        | uniq
 }
 
 mail_addrs \
     | $PROMPT 'mail address:' \
+    | sed  's/ *#.*//' \
     | verify_email
