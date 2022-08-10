@@ -13,6 +13,6 @@ install:
 ${CFG_PATH}:
 	@echo -e "I have setup your toiling space ${CFG_PATH}\nEdit it, slave!"
 	@echo "#Comments must be at the beginning of the line." > ${CFG_PATH}
-	@echo "# No ~ expansion allowed." >> ${CFG_PATH}
+	@echo "# ~ expansion works." >> ${CFG_PATH}
 	@echo -e "# Example line:\n" >> ${CFG_PATH}
 	@echo "#${HOME}/.config/neomutt/aliases" >> ${CFG_PATH}
