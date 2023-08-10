@@ -1,0 +1,65 @@
+#!/bin/sh
+# depends on prompt-mail
+
+DMENULINES=15
+ALIASES="$(sed 's/[\\t ]*#.*//' "$XDG_CONFIG_HOME"/prompt-mail.conf | tr -d "\n" )"
+
+help () {
+    echo "Call without an argument to be prompted with dmenu."
+    echo "Flags:"
+    printf "-h, --help\n-c, --copy\n-a, --add\n-e, --edit\n"
+}
+
+copy () {
+    prompt-mail | tr -d "\n" | xclip -i -selection clipboard
+}
+
+add () {
+    shrt="$(echo ''  | dmenu -p 'short alias: ')"
+    [ -z "$shrt" ] && notify-send 'Need a short alias' && exit 1
+    grep -q "^alias $shrt" "$ALIASES" && notify-send 'That alias short name already exists' && exit 1
+    name="$(echo ''  | dmenu -p 'real name: ')"
+    [ -z "$name" ] && notify-send 'Need a name' && exit 1
+
+    addr="$(echo "$($(xclip -o | grep '@') || echo '')" | dmenu -p 'address: ')"
+    [ -z "$addr" ] && notify-send 'Need an addr' && exit 1
+    echo "$addr" | grep -v '<\|>' && addr="<$addr>"
+    grep -q "$addr" "$ALIASES" && notify-send 'That alias already exists' && exit 1
+
+    comm="$(echo ''  | dmenu -p 'comment: ')"
+    [ -n "$comm" ] && comm=" # $comm"
+
+    printf "alias %s %s %s %s\\n" "$shrt" "$name" "$addr" "$comm" >>"$ALIASES"
+    FAIL="$?"
+    [ $FAIL ] && notify-send "Successfully saved $shrt $name $addr $comm"
+    [ $FAIL ] || notify-send "Failed to save $shrt $name $addr $comm with status code $FAIL"
+}
+
+edit () {
+    echo "Not implemented. Edit \$ALIASES yourself at $ALIASES." && exit 1
+}
+
+plumb () {
+    echo "Not implemented" && exit 1
+}
+
+promptflag () {
+    action="$(printf 'copy\nadd\nedit (not implemented)\nplumb (not implemented)' | dmenu -l 4 -p 'action:')"
+    [ "$action" = "copy" ]  && copy
+    [ "$action" = "edit" ]  && edit
+    [ "$action" = "add" ]   && add
+    [ "$action" = "plumb" ] && plumb
+}
+
+# Get the aliases location from the prompt-mail conf
+
+
+
+[ "$1" = '-h' ] || [ "$1" = '--help' ] && help
+[ "$1" = '-c' ] || [ "$1" = '--copy' ] && copy
+[ "$1" = '-a' ] || [ "$1" = '--add' ]  && add
+[ "$1" = '-e' ] || [ "$1" = '--edit' ] && edit
+[ "$1" = '-e' ] || [ "$1" = '--plumb' ] && plumb
+
+[ -z "$1" ] && promptflag
+[ -n "$2" ] && echo "Too many arguments: use one or none." && exit 1

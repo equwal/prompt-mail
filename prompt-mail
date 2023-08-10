@@ -10,7 +10,7 @@ verify_email () {
 }
 
 mail_addrs () {
-    sed 's/[\\t ]*#.*//' ~/.config/prompt-mail.conf \
+    sed 's/[\\t ]*#.*//' "$XDG_CONFIG_HOME"/prompt-mail.conf \
         | xargs sed -E "s/^alias[\\t ]+[a-zA-Z0-9]+[ \\t]+// ; s/[ \\t]+$//" \
         | sed -E "s:~:$HOME:g" \
         | sort \
