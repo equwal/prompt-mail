@@ -1,6 +1,8 @@
 CFG_PATH = ~/.config/prompt-mail.conf
 BIN_PATH = /usr/local/bin/prompt-mail
 
+.PHONY: all config install uninstall
+
 all: config install
 
 # Empty recipes, only install if there isn't already one.
@@ -16,3 +18,9 @@ ${CFG_PATH}:
 	@echo "# ~ expansion works." >> ${CFG_PATH}
 	@echo -e "# Example line:\n" >> ${CFG_PATH}
 	@echo "#${HOME}/.config/neomutt/aliases" >> ${CFG_PATH}
+
+uninstall:
+	@echo "Removing prompt-mail from ${BIN_PATH}."
+	@rm -f ${BIN_PATH}
+	@echo "Removing config file ${CFG_PATH}."
+	@rm -f ${CFG_PATH}
